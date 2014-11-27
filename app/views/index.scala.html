@@ -1,0 +1,210 @@
+@(title: String, semanas: List[Semana], novasSemanas: Array[String])
+
+@main(title) {
+	<div class="page-header">
+    	<h2>Metas Cadastradas</h2>
+    </div>
+    @if(semanas.isEmpty){
+        <p>Nenhuma meta cadastrada</p>
+    } else {
+		<div class="row">
+			<div class="col-md-3">
+				<h4>Semanas</h4>
+				<ul class="list-group">
+					@for(semana <- semanas) {
+						<li class="list-group-item"><span class="badge">@semana.getTotalDeMetas</span><a href="#semana-@semana.getId" data-toggle="tab">@semana</a></li>
+					}
+				</ul>
+			</div>
+			<div class="col-md-9">
+				<div id="myTabContent" class="tab-content">
+					@for(semana <- semanas) {
+						<div class="tab-pane fade@if(semanas.get(0).equals(semana)) { active in}" id="semana-@semana.getId">
+							<h4><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @semana</h4>
+							<table class="table table-striped table-hover ">
+							  	<thead>
+							    	<tr>
+								      	<th>Nome</th>
+								      	<th>Descrição</th>
+								      	<th>Prioridade</th>
+								      	<th>Status</th>
+								      	<th>Ações</th>
+							    	</tr>
+							  	</thead>
+						  		<tbody>
+									@for(meta <- semana.getMetas) {
+										<tr>
+											<td>@meta.getNome</td>
+											<td>@meta.getDescricao</td>
+											<td>@meta.getPrioridade</td>
+											@if(meta.getStatus){
+												<td><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Alcançada</td>
+											} else {
+												<td><span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span> Não Alcançada</td>
+											}
+											<td>
+							                	<div class="pull-left botao-acoes">
+							                		<a href="#" data-toggle="modal" data-target="#editarMeta@meta.getId">
+							                			<span class="glyphicon glyphicon-pencil" aria-hidden="true" title="Editar Meta"></span>
+							                		</a>
+							                	</div>
+							                	<div class="modal" id="editarMeta@meta.getId">
+												  <div class="modal-dialog">
+												    <div class="modal-content">
+												      <div class="modal-header">
+												        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+												        <h4 class="modal-title">Editar Meta</h4>
+												      </div>
+												      <div class="modal-body">
+														<form class="form-horizontal" method="post" action="/meta/editar">
+														  <input type="hidden" name="id" value="@meta.getId">
+														  <fieldset>
+														   <div class="form-group">
+														      <label for="textArea" class="col-lg-2 control-label">Nome</label>
+														      <div class="col-lg-10">
+														        <input class="form-control" id="textArea" name="nome" required="required" value="@meta.getNome">
+														      </div>
+														    </div>
+														    <div class="form-group">
+														      <label for="textArea" class="col-lg-2 control-label">Descrição</label>
+														      <div class="col-lg-10">
+														        <input class="form-control" id="textArea" name="descricao" required="required" value="@meta.getDescricao">
+														      </div>
+														    </div>
+														    <div class="form-group">
+														      <label for="select" class="col-lg-2 control-label">Semana</label>
+														      <div class="col-lg-10">
+														        <select class="form-control" id="select" name="idsemana">
+														        	<option value="-1">@semana</option>
+															          @for( i <- 0 to novasSemanas.size - 1) {
+																          	@if(semana.toString.equals(novasSemanas(i))) {
+																          	} else {
+																          		<option value="@i">@novasSemanas(i)</option>
+																          	}
+															 		  }
+														        </select>
+														      </div>
+														    </div>
+														    <div class="form-group">
+														      <label for="select" class="col-lg-2 control-label">Prioridade</label>
+														      <div class="col-lg-10">
+														        <select class="form-control" id="select" name="prioridade">
+														        	@if(meta.getPrioridade.ordinal == 0) {
+														        		<option value="baixa">Baixa</option>
+														        		<option value="normal">Normal</option>
+														        		<option value="alta">Alta</option>
+														        	} 
+														        	@if(meta.getPrioridade.ordinal == 1) {
+															        	<option value="normal">Normal</option>
+												 			          	<option value="baixa">Baixa</option>
+												 			          	<option value="alta">Alta</option>
+														        	}
+														        	@if(meta.getPrioridade.ordinal == 2) {
+														        		<option value="alta">Alta</option>
+														        		<option value="baixa">Baixa</option>
+														        		<option value="normal">Normal</option>
+														        	}
+														          
+														        </select>
+														      </div>
+														    </div>
+														    <div class="form-group">
+														      <div class="col-lg-10 col-lg-offset-2">
+														        <button type="submit" class="btn btn-primary">Enviar</button>
+														      </div>
+														    </div>
+														  </fieldset>
+														</form>
+												      </div>
+												    </div>
+												  </div>
+												</div>
+							                	<div class="pull-left botao-acoes">
+							                		<form method="post" action="/meta/status">
+							                			<input type="hidden" name="id" value="@meta.getId">
+							                			<a href="#" onclick="$(this).closest('form').submit();">
+								                			@if(meta.getStatus) {
+								                				<span class="glyphicon glyphicon-thumbs-down" aria-hidden="true" title="Marcar Meta como não alcançada"></span> 
+									                		} else {
+									                			<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" title="Marcar Meta como alcançada"></span>
+									                		}
+							                			</a>
+							                		</form>
+							                	</div>
+							                	<div class="pull-left botao-acoes">
+							                		<form method="post" action="/meta/remover">
+							                			<input type="hidden" name="id" value="@meta.getId">
+							                			<a href="#" onclick="$(this).closest('form').submit();">
+							                				<span class="glyphicon glyphicon-remove" aria-hidden="true" title="Remover Meta"></span>
+							                			</a>
+							                		</form>
+							                	</div>
+						                	</td>
+										</tr>
+									}
+						  		</tbody>
+					   		</table>
+					   		<p class="meta-totais"><b>@semana.getTotalDeMetas</b> meta(s), <b>@semana.getTotalDeMetasAlcancadas</b> alcançada(s) e <b>@semana.getTotalDeMetasNaoAlcancadas</b> a alcançar.</p>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	}
+	
+	<div class="btn btn-primary pull-right" data-toggle="modal" data-target="#adicionarMeta">Adicionar Meta</div>
+
+	<div class="modal" id="adicionarMeta">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	        <h4 class="modal-title">Adicionar Nova Meta</h4>
+	      </div>
+	      <div class="modal-body">
+			<form class="form-horizontal" method="post" action="/meta/adicionar">
+			  <fieldset>
+			   <div class="form-group">
+			      <label for="textArea" class="col-lg-2 control-label">Nome</label>
+			      <div class="col-lg-10">
+			        <input class="form-control" id="textArea" name="nome" required="required">
+			      </div>
+			    </div>
+			    <div class="form-group">
+			      <label for="textArea" class="col-lg-2 control-label">Descrição</label>
+			      <div class="col-lg-10">
+			        <input class="form-control" id="textArea" name="descricao" required="required"></textarea>
+			      </div>
+			    </div>
+			    <div class="form-group">
+			      <label for="select" class="col-lg-2 control-label">Semana</label>
+			      <div class="col-lg-10">
+			        <select class="form-control" id="select" name="idsemana">
+					@for( i <- 0 to novasSemanas.size - 1) {
+			 			<option value="@i">@novasSemanas(i)</option>
+			 		}
+			        </select>
+			      </div>
+			    </div>
+			    <div class="form-group">
+			      <label for="select" class="col-lg-2 control-label">Prioridade</label>
+			      <div class="col-lg-10">
+			        <select class="form-control" id="select" name="prioridade">
+			          <option value="normal">Normal</option>
+ 			          <option value="baixa">Baixa</option>
+ 			          <option value="alta">Alta</option>
+			        </select>
+			      </div>
+			    </div>
+			    <div class="form-group">
+			      <div class="col-lg-10 col-lg-offset-2">
+			        <button type="submit" class="btn btn-primary">Enviar</button>
+			      </div>
+			    </div>
+			  </fieldset>
+			</form>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+}

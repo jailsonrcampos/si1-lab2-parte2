@@ -1,0 +1,63 @@
+@(title: String)(content: Html)
+<!DOCTYPE html>
+<html lang="pt_BR">
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap -->
+<link href="/assets/css/bootstrap.css" rel="stylesheet">
+<link href="/assets/css/bootstrap-theme.css" rel="stylesheet">
+
+<link href="/assets/css/style.css" rel="stylesheet">
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="/assets/js/html5shiv.min.js"></script>
+  <script src="/assets/js/respond.min.js"></script>
+<![endif]-->
+
+<title>@title</title>
+
+</head>
+<body>
+
+	<div class="container header">
+		<div class="row">
+			<div class="col-md-6">
+				<a href="/"><img src="/assets/images/logo.png" alt="Logo" class="img-responsive"></a>
+			</div>
+			<div class="col-md-6">
+				<br /><h3>Lab 2 da disciplina SI 1 - UFCG</h3>
+			</div>
+		</div>
+	</div>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 content-box">
+				@content
+			</div>
+		</div>
+	</div>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+			<hr>
+				<p align="center">Lab 2 da disciplina SI 1 - UFCG</p>
+			</div>
+		</div>
+	</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/assets/js/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/assets/js/bootstrap.min.js"></script>
+    
+    <script src="/assets/js/scripts.js"></script>
+    	
+</body>
+</html>

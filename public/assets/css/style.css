@@ -1,0 +1,32 @@
+/* Arquivo de folhas de estilos */
+
+.header {
+	padding: 10px;
+}
+
+.content-box {
+	min-height: 300px;
+}
+
+.botao-acoes {
+	padding-left: 5px;
+}
+.meta-totais {
+	font-size: 90%;
+	float: right;
+	margin: 0 0 20px 0;
+}
+.oculto {
+	display: none;
+}
+.list-group-item.active a {
+	color: #FFF;
+}
+.list-group-item.active .badge {
+	background: #FFF;
+	color: #666;
+}
+.tab-content {
+	padding-top: 35px;
+}
+
