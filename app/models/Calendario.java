@@ -8,7 +8,7 @@ public class Calendario {
 		if(semana < 0) return null;
     	GregorianCalendar temp = new GregorianCalendar();
 
-    	while(temp.get(temp.DAY_OF_WEEK) != 1) {
+    	while(temp.get(GregorianCalendar.DAY_OF_WEEK) != 1) {
 			temp.add(GregorianCalendar.DATE, 1);
     	}
     	temp.add(GregorianCalendar.DATE, semana*7);
@@ -17,10 +17,6 @@ public class Calendario {
 	
 	public static String getSemana(int semana) {
 		return getSemana(getCalendarioDaSemana(semana)) ;
-	}
-	
-	public static String getSemana(Semana semana) {
-		return getSemana(semana.getCalendario()) ;
 	}
 	
 	public static String getSemana(GregorianCalendar calendario) {

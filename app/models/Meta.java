@@ -81,7 +81,7 @@ public class Meta implements Comparable<Meta>{
 
 	@Override
 	public int compareTo(Meta meta) {
-		return meta.getPrioridade().ordinal() - this.prioridade.ordinal();
+		return this.prioridade.ordinal() - meta.getPrioridade().ordinal();
 	}
 	
 }

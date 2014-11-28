@@ -26,7 +26,7 @@ public class Application extends Controller {
     	List<Semana> semanas = dao.findAllByClassName(Semana.class.getName());
     	Collections.sort(semanas);
     	for (int i = 0; i < semanas.size(); i++) {
-			Collections.sort(semanas.get(i).getMetas());
+    		Collections.sort(semanas.get(i).getMetas(), Collections.reverseOrder());
 		}
         return ok(index.render("Minhas Metas", semanas, Calendario.getSemanas(MAX_SEMANAS)));
         
