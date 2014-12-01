@@ -58,13 +58,12 @@ public class Application extends Controller {
         	semanas.get(i).addMeta(meta);
         	meta.setSemana(semanas.get(i));
         	dao.persist(semanas.get(i));
-        	dao.persist(meta);
         } else {
         	semana.addMeta(meta);
         	meta.setSemana(semana);
         	dao.persist(semana);
-        	dao.persist(meta);
         }
+        dao.persist(meta);
         
         return redirect("/");
     }
@@ -89,30 +88,32 @@ public class Application extends Controller {
         }
         
         Meta meta = dao.findByEntityId(Meta.class, id);
+        Semana oldSemana = meta.getSemana();
+    	Semana newSemana = new Semana(Calendario.getCalendarioDaSemana(idSemana));
+    	List<Semana> semanas = dao.findAllByClassName(Semana.class.getName());
         
         meta.setNome(nome);
         meta.setDescricao(descricao);
         meta.setPrioridade(prioridade);
         
-        if(idSemana >= 0) {
-        	Semana oldSemana = meta.getSemana();
-        	Semana newSemana = new Semana(Calendario.getCalendarioDaSemana(idSemana));
-        	List<Semana> semanas = dao.findAllByClassName(Semana.class.getName());
+        if(idSemana >= 0 && !oldSemana.equals(newSemana)) {
+        	oldSemana.removeMeta(meta);
+        	dao.remove(meta);
+        	if(oldSemana.getTotalDeMetas() == 0) {
+        		dao.remove(oldSemana);
+        	} else {
+        		dao.persist(oldSemana);
+        	}
         	int i = semanas.indexOf(newSemana);
             if(i >= 0) {
             	semanas.get(i).addMeta(meta);
             	meta.setSemana(semanas.get(i));
-            	oldSemana.removeMeta(meta);
             	dao.persist(semanas.get(i));
             } else {
             	newSemana.addMeta(meta);
             	meta.setSemana(newSemana);
-            	oldSemana.removeMeta(meta);
             	dao.persist(newSemana);
             }
-            if(oldSemana.getTotalDeMetas() == 0) {
-        		dao.remove(oldSemana);
-        	}
         }
         dao.persist(meta);
         
