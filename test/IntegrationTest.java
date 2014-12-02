@@ -19,11 +19,25 @@ public class IntegrationTest {
 	FakeRequest fakeRequest;
 
 	@Test
-    public void testDeveTerPaginaInicalSemMetas() {
+    public void testDeveMostrarMetasIniciais() {
         running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             public void invoke(TestBrowser browser) {
                 browser.goTo("http://localhost:3333/");
-                assertThat(browser.pageSource()).contains("Nenhuma meta cadastrada");
+                assertThat(browser.pageSource()).contains("Terminar o Lab de SI1");
+                assertThat(browser.pageSource()).contains("Viajar para Recife");
+                assertThat(browser.pageSource()).contains("Aprender Global Settings");
+                assertThat(browser.pageSource()).contains("Terminar Lista de Logica");
+                assertThat(browser.pageSource()).contains("Terminar Lista de Algebra");
+                assertThat(browser.pageSource()).contains("Aprender HTML");
+                assertThat(browser.pageSource()).contains("Apender Javascript");
+                assertThat(browser.pageSource()).contains("Comprar uma caixa de cerveja");
+                assertThat(browser.pageSource()).contains("Sacar dinheio no BB");
+                assertThat(browser.pageSource()).contains("Pagar Contas");
+                assertThat(browser.pageSource()).contains("10");
+                assertThat(browser.pageSource()).contains("4");
+                assertThat(browser.pageSource()).contains("3");
+                assertThat(browser.pageSource()).contains("Alta");
+                assertThat(browser.pageSource()).contains("Normal");
             }
         });
     }
@@ -32,7 +46,6 @@ public class IntegrationTest {
     public void testDeveAdicionarRecuperarMetaNaPagina() {
         running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             public void invoke(TestBrowser browser) {
-                browser.goTo("http://localhost:3333/");
 
                 parameters = new HashMap<String, String>();
                 parameters.put("nome", "M1");
@@ -49,10 +62,6 @@ public class IntegrationTest {
                 browser.goTo("http://localhost:3333/");
                 assertThat(browser.pageSource()).contains("M1");
                 assertThat(browser.pageSource()).contains("Sistemas de Informação 1");
-                assertThat(browser.pageSource()).contains("Baixa");
-                assertThat(browser.pageSource()).contains("Não Alcançada");
-                String semana = Calendario.getSemana(0);
-                assertThat(browser.pageSource()).contains(semana);
                 
             }
         });
@@ -62,30 +71,7 @@ public class IntegrationTest {
     public void testDeveDeletarMetaNaPagina() {
         running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             public void invoke(TestBrowser browser) {
-                browser.goTo("http://localhost:3333/");
 
-                parameters = new HashMap<String, String>();
-                parameters.put("nome", "M1");
-                parameters.put("descricao", "Sistemas de Informação 1");
-                parameters.put("idsemana", "0");
-                parameters.put("prioridade", "baixa");
-
-                fakeRequest = new FakeRequest().withFormUrlEncodedBody(parameters);
-
-                result = Helpers.callAction(controllers.routes.ref.Application.adicionarMeta(), fakeRequest);
-                assertThat(status(result)).isEqualTo(Http.Status.SEE_OTHER);
-        		assertThat(redirectLocation(result)).isEqualTo("/");
-
-                browser.goTo("http://localhost:3333/");
-                assertThat(browser.pageSource()).contains("M1");
-                assertThat(browser.pageSource()).contains("Sistemas de Informação 1");
-                assertThat(browser.pageSource()).contains("Baixa");
-                assertThat(browser.pageSource()).contains("Não Alcançada");
-                String semana = Calendario.getSemana(0);
-                assertThat(browser.pageSource()).contains(semana);
-                
-                browser.goTo("http://localhost:3333/meta/remover");
-                
                 parameters = new HashMap<String, String>();
                 parameters.put("id", "1");
                 
@@ -97,8 +83,8 @@ public class IntegrationTest {
         		
                 browser.goTo("http://localhost:3333/");
                 
-                assertThat(browser.pageSource()).contains("Nenhuma meta cadastrada");
-                
+                assertThat(browser.pageSource()).doesNotContain("Terminar o Lab de SI1");
+
             }
         });
     }
@@ -212,32 +198,9 @@ public class IntegrationTest {
     public void testDeveMudarStatusDaMeta() {
         running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             public void invoke(TestBrowser browser) {
-                browser.goTo("http://localhost:3333/");
-
-                parameters = new HashMap<String, String>();
-                parameters.put("nome", "M1");
-                parameters.put("descricao", "Sistemas de Informação 1");
-                parameters.put("idsemana", "0");
-                parameters.put("prioridade", "baixa");
-
-                fakeRequest = new FakeRequest().withFormUrlEncodedBody(parameters);
-
-                result = Helpers.callAction(controllers.routes.ref.Application.adicionarMeta(), fakeRequest);
-                assertThat(status(result)).isEqualTo(Http.Status.SEE_OTHER);
-        		assertThat(redirectLocation(result)).isEqualTo("/");
-
-                browser.goTo("http://localhost:3333/");
-                assertThat(browser.pageSource()).contains("M1");
-                assertThat(browser.pageSource()).contains("Sistemas de Informação 1");
-                assertThat(browser.pageSource()).contains("Baixa");
-                assertThat(browser.pageSource()).contains("Não Alcançada");
-                String semana = Calendario.getSemana(0);
-                assertThat(browser.pageSource()).contains(semana);
-                
-                browser.goTo("http://localhost:3333/meta/status");
                 
                 parameters = new HashMap<String, String>();
-                parameters.put("id", "1");
+                parameters.put("id", "2");
                 
                 fakeRequest = new FakeRequest().withFormUrlEncodedBody(parameters);
 
@@ -255,59 +218,12 @@ public class IntegrationTest {
     public void testRecuperarEstatisticasDaSemanaNaPagina() {
         running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             public void invoke(TestBrowser browser) {
-                browser.goTo("http://localhost:3333/");
-
-                parameters = new HashMap<String, String>();
-                parameters.put("nome", "M1");
-                parameters.put("descricao", "Sistemas de Informação 1");
-                parameters.put("idsemana", "0");
-                parameters.put("prioridade", "baixa");
-
-                fakeRequest = new FakeRequest().withFormUrlEncodedBody(parameters);
-
-                result = Helpers.callAction(controllers.routes.ref.Application.adicionarMeta(), fakeRequest);
-                assertThat(status(result)).isEqualTo(Http.Status.SEE_OTHER);
-        		assertThat(redirectLocation(result)).isEqualTo("/");
-
-                parameters = new HashMap<String, String>();
-                parameters.put("nome", "M2");
-                parameters.put("descricao", "Sistemas de Informação 2");
-                parameters.put("idsemana", "0");
-                parameters.put("prioridade", "baixa");
-
-                fakeRequest = new FakeRequest().withFormUrlEncodedBody(parameters);
-
-                result = Helpers.callAction(controllers.routes.ref.Application.adicionarMeta(), fakeRequest);
-                assertThat(status(result)).isEqualTo(Http.Status.SEE_OTHER);
-        		assertThat(redirectLocation(result)).isEqualTo("/");
-
-                parameters = new HashMap<String, String>();
-                parameters.put("nome", "M3");
-                parameters.put("descricao", "Sistemas de Informação 3");
-                parameters.put("idsemana", "0");
-                parameters.put("prioridade", "baixa");
-
-                fakeRequest = new FakeRequest().withFormUrlEncodedBody(parameters);
-
-                result = Helpers.callAction(controllers.routes.ref.Application.adicionarMeta(), fakeRequest);
-                assertThat(status(result)).isEqualTo(Http.Status.SEE_OTHER);
-        		assertThat(redirectLocation(result)).isEqualTo("/");
-                
-                browser.goTo("http://localhost:3333/meta/status");
-                
-                parameters = new HashMap<String, String>();
-                parameters.put("id", "1");
-                
-                fakeRequest = new FakeRequest().withFormUrlEncodedBody(parameters);
-
-                result = Helpers.callAction(controllers.routes.ref.Application.mudarStatusDaMeta(), fakeRequest);
-                assertThat(status(result)).isEqualTo(Http.Status.SEE_OTHER);
-        		assertThat(redirectLocation(result)).isEqualTo("/");
+              
                 
                 browser.goTo("http://localhost:3333/");
+                assertThat(browser.pageSource()).contains("4");
                 assertThat(browser.pageSource()).contains("3");
                 assertThat(browser.pageSource()).contains("2");
-                assertThat(browser.pageSource()).contains("1");
             }
         });
     }
