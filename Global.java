@@ -4,7 +4,6 @@ import models.Calendario;
 import models.GenericDAO;
 import models.Meta;
 import models.Semana;
-import models.Serie;
 import models.Meta.Prioridade;
 import play.*;
 import play.db.jpa.JPA;
